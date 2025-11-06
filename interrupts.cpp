@@ -67,9 +67,6 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
             allocate_memory(&childProcess); 
 
             wait_queue.push_back(current); //parent will wait while child is running 
-            system_status += "time: " + std::to_string(current_time) + "; current trace: FORK " + childProcess.program_name;
-            system_status += print_PCB(childProcess, wait_queue) + "\n";
-
 
             execution +=  std::to_string(current_time) + ", 0, scheduler called\n";
 
@@ -130,7 +127,23 @@ std::tuple<std::string, std::string, int> simulate_trace(std::vector<std::string
 
             ///////////////////////////////////////////////////////////////////////////////////////////
             //Add your EXEC output here
-            
+
+            int time_perMB = 15; //example in document 
+   
+            execution += std::to_string(current_time) + ", 50, Program is " + std::to_string(current.size) + " Mb large\n";
+            current_time += 50;
+
+            execution += std::to_string(current_time) + ", " + std::to_string(current.size * time_perMB) + ", loading program into memory\n";
+            current_time += current.size * time_perMB;
+
+            execution += std::to_string(current_time) + ", 3, marking partition as occupied\n";
+            current_time += 3;
+
+            execution += std::to_string(current_time) + ", 6, updating PCB\n";
+            current_time += 6;
+
+            execution +=  std::to_string(current_time) + ", 0, scheduler called\n";
+
             system_status += "time: " + std::to_string(current_time) + "; current trace: EXEC " + current.program_name;
             system_status += print_PCB(current, wait_queue) + "\n";
 
@@ -188,7 +201,6 @@ int main(int argc, char** argv) {
     std::vector<PCB> wait_queue;
 
     /******************ADD YOUR VARIABLES HERE*************************/
-    
    
 
     /******************************************************************/
